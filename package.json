@@ -10,7 +10,10 @@
     "test": "node test.js",
     "e2e": "node e2e.mjs",
     "dist": "electron-builder",
-    "build:ios": "mkdir -p www && cp index.html app.js editor.js layout.js www/ && cp -R templates www/"
+    "build:mobile": "node scripts/build-mobile.mjs",
+    "test:mobile": "npm run build:mobile && electron scripts/test-mobile.cjs",
+    "build:ios": "npm run build:mobile",
+    "sync:mobile": "npm run build:mobile && cap sync"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.6.3",
@@ -24,6 +27,8 @@
       "main.js",
       "preload.js",
       "index.html",
+      "booth-defaults.js",
+      "booth-mobile.js",
       "app.js",
       "editor.js",
       "layout.js",

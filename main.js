@@ -3,6 +3,7 @@ const fs = require('node:fs/promises')
 const os = require('node:os')
 const path = require('node:path')
 const { pathToFileURL } = require('node:url')
+const boothDefaults = require('./booth-defaults')
 
 const MIME = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.gif': 'image/gif', '.webp': 'image/webp' }
 const settingsFile = () => path.join(app.getPath('userData'), 'settings.json')
@@ -11,12 +12,7 @@ const safe = s => String(s).replace(/[\\/:*?"<>|]+/g, '_').trim() || 'Event'
 const slug = s => String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'layout'
 const exists = p => fs.stat(p).then(() => true, () => false)
 const dataUrl = async file => `data:${MIME[path.extname(file).toLowerCase()] || 'image/png'};base64,${(await fs.readFile(file)).toString('base64')}`
-const defaults = () => ({
-  eventName: 'My Event', startText: 'Touch to start', cameraId: '', mirror: true, templateId: 'builtin:classic-strip', filter: 'none',
-  countdown: 3, betweenShots: 2, reviewSeconds: 20,
-  outputDir: path.join(app.getPath('pictures'), 'Open Photo Booth'),
-  printer: '', copies: 1, autoPrint: false, print2up: true, kiosk: false, pin: '',
-})
+const defaults = () => boothDefaults(path.join(app.getPath('pictures'), 'Open Photo Booth'))
 const picked = new Set() // image files the user chose in a dialog; only these may be copied into templates
 const gotLock = app.requestSingleInstanceLock()
 let win

@@ -11,6 +11,7 @@ const FILTERS = {
 }
 const video = $('#video'), form = $('#settingsForm')
 let settings, templates = [], template, assets = {}, stream, current, reviewTimer
+let cameraGeneration = 0, cameraPending = false
 
 const show = screen => { document.body.dataset.screen = screen }
 const screen = () => document.body.dataset.screen
@@ -25,16 +26,49 @@ function toast(msg) {
   toast.timer = setTimeout(() => t.classList.remove('on'), 4000)
 }
 
-async function startCamera() {
+function stopCamera() {
+  cameraGeneration++
+  cameraPending = false
   stream?.getTracks().forEach(t => t.stop())
-  const size = { width: { ideal: 3840 }, height: { ideal: 2160 } }
-  stream = await navigator.mediaDevices.getUserMedia({ video: { ...size, deviceId: settings.cameraId ? { exact: settings.cameraId } : undefined } })
-    .catch(() => navigator.mediaDevices.getUserMedia({ video: size }))
-    .catch(() => null)
-  video.srcObject = stream
-  video.classList.toggle('mirror', settings.mirror)
-  if (!stream) toast('No camera found. Hold the top-right corner to open settings.')
+  stream = null
+  video.srcObject = null
 }
+
+async function startCamera() {
+  stopCamera()
+  if (booth.mobile && document.hidden) return
+  const generation = cameraGeneration
+  cameraPending = true
+  const size = { width: { ideal: booth.mobile ? 1920 : 3840 }, height: { ideal: booth.mobile ? 1080 : 2160 } }
+  if (booth.mobile) size.facingMode = { ideal: 'user' }
+  video.classList.toggle('mirror', settings.mirror)
+  try {
+    const capture = constraints => navigator.mediaDevices.getUserMedia({ audio: false, video: constraints })
+    let next
+    if (settings.cameraId) {
+      try { next = await capture({ ...size, deviceId: { exact: settings.cameraId } }) }
+      catch (error) { if (!['OverconstrainedError', 'NotFoundError'].includes(error.name)) throw error }
+    }
+    next ??= await capture(size)
+    if (generation !== cameraGeneration) { next.getTracks().forEach(t => t.stop()); return }
+    stream = next
+    video.srcObject = stream
+    await video.play()
+  } catch (error) {
+    if (generation !== cameraGeneration) return
+    stopCamera()
+    toast(error.name === 'NotAllowedError'
+      ? 'Camera access is off. Allow camera access in system settings, then tap to start.'
+      : 'No camera available. Hold the top-right corner to open settings.')
+  } finally {
+    if (generation === cameraGeneration) cameraPending = false
+  }
+}
+
+if (booth.mobile) document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stopCamera()
+  else if (settings) startCamera()
+})
 
 // Parses every template and preloads their images into assets[templateId][src].
 async function loadTemplates() {
@@ -79,6 +113,36 @@ function placeholder(i) {
 }
 const placeholderShots = n => Array.from({ length: n }, (_, i) => placeholder(i))
 
+// Older tablet web views support CSS filters on screen, but omit them when exporting a canvas.
+// Filter just the cropped slot so the original camera photo keeps its full colour and resolution.
+function filterSlot(source, crop, w, h, filter) {
+  const slot = canvas(Math.max(1, Math.round(w)), Math.max(1, Math.round(h)))
+  const ctx = slot.getContext('2d', { willReadFrequently: true })
+  ctx.drawImage(source, crop.sx, crop.sy, crop.sw, crop.sh, 0, 0, slot.width, slot.height)
+  const image = ctx.getImageData(0, 0, slot.width, slot.height), pixels = image.data
+  const sepia = filter === 'sepia' ? 0.85 : filter === 'warm' ? 0.3 : 0
+  const saturation = { bw: 0, warm: 1.4, vivid: 1.6, fade: 0.7 }[filter] ?? 1
+  const contrast = { bw: 1.15, vivid: 1.1, fade: 0.85 }[filter] ?? 1
+  const brightness = filter === 'fade' ? 1.1 : 1
+  for (let i = 0; i < pixels.length; i += 4) {
+    let r = pixels[i], g = pixels[i + 1], b = pixels[i + 2]
+    if (sepia) {
+      const sr = 0.393 * r + 0.769 * g + 0.189 * b
+      const sg = 0.349 * r + 0.686 * g + 0.168 * b
+      const sb = 0.272 * r + 0.534 * g + 0.131 * b
+      r = Math.min(255, r + sepia * (sr - r))
+      g = Math.min(255, g + sepia * (sg - g))
+      b = Math.min(255, b + sepia * (sb - b))
+    }
+    const gray = 0.2126 * r + 0.7152 * g + 0.0722 * b
+    pixels[i] = ((gray + saturation * (r - gray) - 127.5) * contrast + 127.5) * brightness
+    pixels[i + 1] = ((gray + saturation * (g - gray) - 127.5) * contrast + 127.5) * brightness
+    pixels[i + 2] = ((gray + saturation * (b - gray) - 127.5) * contrast + 127.5) * brightness
+  }
+  ctx.putImageData(image, 0, 0)
+  return slot
+}
+
 function compose(shots, t = template, { filter = settings.filter, images = assets[t.id] || {} } = {}) {
   const c = canvas(t.width, t.height), ctx = c.getContext('2d')
   const vars = { event: settings.eventName, date: new Date().toLocaleDateString() }
@@ -99,9 +163,15 @@ function compose(shots, t = template, { filter = settings.filter, images = asset
       const s = shots[e.photo - 1]
       if (s) {
         const k = Layout.cover(s.width, s.height, e.w, e.h)
-        ctx.filter = FILTERS[filter]?.[1] || 'none'
-        ctx.drawImage(s, k.sx, k.sy, k.sw, k.sh, 0, 0, e.w, e.h)
-        ctx.filter = 'none'
+        if (FILTERS[filter] && filter !== 'none' && !('filter' in ctx)) {
+          const slot = filterSlot(s, k, e.w, e.h, filter)
+          ctx.drawImage(slot, 0, 0, e.w, e.h)
+          slot.width = slot.height = 0
+        } else {
+          if ('filter' in ctx) ctx.filter = FILTERS[filter]?.[1] || 'none'
+          ctx.drawImage(s, k.sx, k.sy, k.sw, k.sh, 0, 0, e.w, e.h)
+          if ('filter' in ctx) ctx.filter = 'none'
+        }
       }
     } else if (e.type === 'Image') {
       const img = images[e.src]
@@ -143,23 +213,27 @@ function twoUp(c) {
   return out
 }
 
-async function save(c, name) {
+async function save(c, name, eventName) {
   const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.92))
-  return booth.savePhoto(name, await blob.arrayBuffer())
+  if (!blob) throw new Error('Could not encode the photo.')
+  return booth.savePhoto(name, await blob.arrayBuffer(), eventName)
 }
 
 // Every session is written to disk as soon as it is captured, so nothing is lost if the booth is closed mid-review.
-async function saveSession({ shots, sheet }) {
-  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace('T', '-').slice(0, 15)
-  for (const [i, s] of shots.entries()) await save(s, `${stamp}_${i + 1}.jpg`)
-  return { stamp, file: await save(sheet, `${stamp}.jpg`) }
+async function saveSession({ shots, sheet, eventName }) {
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace('T', '-').replace('.', '-').replace('Z', '')
+  for (const [i, s] of shots.entries()) await save(s, `${stamp}_${i + 1}.jpg`, eventName)
+  return { stamp, file: await save(sheet, `${stamp}.jpg`, eventName) }
 }
 
 async function startSession() {
-  if (screen() !== 'attract') return
-  if (!stream || !template) return toast(!stream ? 'No camera found.' : 'No layout available.')
-  if (!video.videoWidth) return toast('Camera is starting, try again in a moment.')
+  if (screen() !== 'attract' || !settings || cameraPending) return
+  if (booth.mobile && !stream?.active) await startCamera()
+  if (!stream) { if (!booth.mobile) toast('No camera found.'); return }
+  if (!template) return toast('No layout available.')
+  if (!video.videoWidth || video.readyState < 2) return toast('Camera is starting, try again in a moment.')
   clearTimeout(reviewTimer)
+  const generation = cameraGeneration
   show('capture')
   try {
     const shots = []
@@ -167,11 +241,12 @@ async function startSession() {
       $('#status').textContent = template.shots > 1 ? `Photo ${i} of ${template.shots}` : ''
       for (let n = settings.countdown; n > 0; n--) { $('#count').textContent = n; await sleep(1000) }
       $('#count').textContent = ''
+      if (generation !== cameraGeneration || !stream.active || video.readyState < 2) throw new Error('Camera interrupted. Tap to start again.')
       shots.push(grab())
       $('#flash').classList.remove('on'); void $('#flash').offsetWidth; $('#flash').classList.add('on')
       if (i < template.shots) await sleep(settings.betweenShots * 1000)
     }
-    current = { shots, sheet: compose(shots) }
+    current = { shots, sheet: compose(shots), template, eventName: settings.eventName, print2up: settings.print2up }
     current.saved = saveSession(current)
     current.saved.catch(e => toast(`Could not save photos: ${e.message}`))
     $('#result').src = current.sheet.toDataURL('image/jpeg', 0.9)
@@ -186,27 +261,38 @@ async function startSession() {
 }
 
 async function printCurrent() {
+  if ($('#print').disabled || !current) return
+  const session = current
+  clearTimeout(reviewTimer)
   $('#print').disabled = true // one print per session from the booth; reprint from the photos folder
   try {
-    const { stamp, file } = await current.saved
-    const t = template, strip = Math.max(t.width, t.height) / Math.min(t.width, t.height) >= 2.5
+    const { stamp, file } = await session.saved
+    const t = session.template, strip = Math.max(t.width, t.height) / Math.min(t.width, t.height) >= 2.5
     let path = file, w = t.width, h = t.height
-    if (strip && settings.print2up) {
-      const sheet = twoUp(current.sheet)
-      path = await save(sheet, `${stamp}_print.jpg`)
+    if (strip && session.print2up) {
+      const sheet = twoUp(session.sheet)
+      session.printFile ??= await save(sheet, `${stamp}_print.jpg`, session.eventName)
+      path = session.printFile
       w = sheet.width; h = sheet.height
     }
+    if (session !== current || screen() !== 'review') return
     toast('Printing…')
     const err = await booth.print(path, w / t.dpi, h / t.dpi)
-    if (err) toast(`Print failed: ${err}`)
+    if (err?.cancelled) {
+      if (session === current) $('#print').disabled = false
+      toast('Print cancelled.')
+    } else if (err) throw new Error(err)
   } catch (e) {
+    if (session === current) $('#print').disabled = false
     toast(`Print failed: ${e.message}`)
+  } finally {
+    if (session === current && screen() === 'review') reviewTimer = setTimeout(done, settings.reviewSeconds * 1000)
   }
 }
 
 function done() {
   clearTimeout(reviewTimer)
-  if (screen() === 'review') show('attract')
+  if (screen() === 'review') { current = null; show('attract') }
 }
 
 // Settings
@@ -217,14 +303,15 @@ function updatePreview() {
 }
 
 function requestSettings() {
-  if (document.querySelector('dialog[open]') || screen() === 'editor') return
+  if (!settings || document.querySelector('dialog[open]') || ['capture', 'editor'].includes(screen())) return
   if (!settings.pin) return openSettings()
   $('#pinInput').value = ''
   $('#pinDialog').showModal()
 }
 
 async function openSettings() {
-  const cams = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'videoinput')
+  const devices = await navigator.mediaDevices?.enumerateDevices().catch(() => [])
+  const cams = (devices || []).filter(d => d.kind === 'videoinput')
   fill(form.cameraId, [['', 'Default camera'], ...cams.map((d, i) => [d.deviceId, d.label || `Camera ${i + 1}`])])
   fillTemplates()
   fill(form.filter, Object.entries(FILTERS).map(([k, [label]]) => [k, label]))
@@ -243,7 +330,7 @@ async function saveForm() {
   await applySettings()
 }
 
-form.addEventListener('submit', e => { if (e.submitter?.value === 'save') saveForm() })
+form.addEventListener('submit', e => { if (e.submitter?.value === 'save') saveForm().catch(error => toast(`Could not apply settings: ${error.message}`)) })
 form.templateId.onchange = form.filter.onchange = updatePreview
 $('#pinForm').addEventListener('submit', () => {
   if ($('#pinInput').value === settings.pin) openSettings()
@@ -276,7 +363,7 @@ $('#done').onclick = done
 
 let pressTimer
 $('#corner').addEventListener('pointerdown', () => { pressTimer = setTimeout(requestSettings, 1500) })
-for (const ev of ['pointerup', 'pointerleave']) $('#corner').addEventListener(ev, () => clearTimeout(pressTimer))
+for (const ev of ['pointerup', 'pointerleave', 'pointercancel']) $('#corner').addEventListener(ev, () => clearTimeout(pressTimer))
 addEventListener('keydown', e => {
   if ((e.metaKey || e.ctrlKey) && e.key === ',') return requestSettings()
   if (document.querySelector('dialog[open]') || (e.key !== ' ' && e.key !== 'Enter')) return
@@ -284,4 +371,4 @@ addEventListener('keydown', e => {
   else if (screen() === 'review') { e.preventDefault(); done() }
 })
 
-booth.getSettings().then(s => { settings = s; return applySettings() })
+booth.getSettings().then(s => { settings = s; return applySettings() }).catch(error => toast(`Could not start booth: ${error.message}`))

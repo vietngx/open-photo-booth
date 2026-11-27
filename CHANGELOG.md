@@ -7,6 +7,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 ### Added
 
+- Android and iPadOS development builds share the booth interface and layout editor through Capacitor. Tablets save event photos locally and print the finished layouts through the system print dialog.
 - `npm run e2e`: an end-to-end check that drives the real app with a fake camera through a photo session, the settings PIN and the layout editor, in a throwaway profile.
 
 ## [0.1.0] - 2026-10-18

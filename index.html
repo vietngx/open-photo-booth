@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; media-src 'self' blob: mediastream:; style-src 'self' 'unsafe-inline'">
 <title>Open Photo Booth</title>
 <style>
@@ -80,6 +81,20 @@
   #edProps input[type="range"] { padding: 0; }
   .ed-footer { margin-top: auto; display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap; padding-top: 12px; }
   .hint { color: #888; font-size: .8rem; line-height: 1.5; margin: 0; }
+  html[data-platform] .desktop-only, html:not([data-platform]) .tablet-only { display: none; }
+  .import-hint { grid-column: 2; }
+  @media (max-width: 900px) {
+    html[data-platform] #editor { grid-template-columns: minmax(150px, 22%) minmax(0, 1fr) minmax(185px, 27%); }
+    html[data-platform] .ed-side { padding: 8px; }
+    html[data-platform] #edProps label { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 620px) {
+    html[data-platform] .grid { grid-template-columns: 1fr; }
+    html[data-platform] .grid > * { grid-column: 1; }
+    html[data-platform] .row, html[data-platform] .actions { flex-wrap: wrap; }
+    html[data-platform] #editor { grid-template: minmax(160px, 50%) minmax(0, 1fr) / 1fr 1fr; }
+    html[data-platform] .ed-stage { grid-area: 1 / 1 / 2 / 3; }
+  }
 </style>
 </head>
 <body data-screen="attract">
@@ -151,25 +166,26 @@
         <h3>Photos</h3>
         <label for="templateId">Layout</label>
         <div class="row"><select id="templateId" name="templateId"></select><button type="button" id="import">Import…</button><button type="button" id="openEditor">Edit layouts…</button></div>
+        <p class="tablet-only hint import-hint">To import a layout, select its template.xml file and its images together.</p>
         <img id="preview" alt="Layout preview">
         <label for="filter">Filter</label><select id="filter" name="filter"></select>
         <label for="countdown">Countdown (s)</label><input id="countdown" name="countdown" type="number" min="0" max="10">
         <label for="betweenShots">Pause between photos (s)</label><input id="betweenShots" name="betweenShots" type="number" min="0" max="10">
         <label for="reviewSeconds">Review screen (s)</label><input id="reviewSeconds" name="reviewSeconds" type="number" min="3" max="300">
         <label for="outputDir">Save photos to</label>
-        <div class="row"><input id="outputDir" name="outputDir" readonly><button type="button" id="choose">Choose…</button></div>
+        <div class="row"><input id="outputDir" name="outputDir" readonly><button type="button" id="choose" class="desktop-only">Choose…</button></div>
         <h3>Printing</h3>
-        <label for="printer">Printer</label><select id="printer" name="printer"></select>
-        <label for="copies">Copies</label><input id="copies" name="copies" type="number" min="1" max="10">
-        <label for="autoPrint">Print automatically</label><input id="autoPrint" name="autoPrint" type="checkbox">
+        <label for="printer" class="desktop-only">Printer</label><select id="printer" name="printer" class="desktop-only"></select>
+        <label for="copies" class="desktop-only">Copies</label><input id="copies" name="copies" class="desktop-only" type="number" min="1" max="10">
+        <label for="autoPrint"><span class="desktop-only">Print automatically</span><span class="tablet-only">Open print dialog after capture</span></label><input id="autoPrint" name="autoPrint" type="checkbox">
         <label for="print2up">Print strips 2-up (4×6)</label><input id="print2up" name="print2up" type="checkbox">
         <h3>Kiosk</h3>
-        <label for="kiosk">Fullscreen kiosk</label><input id="kiosk" name="kiosk" type="checkbox">
+        <label for="kiosk" class="desktop-only">Fullscreen kiosk</label><input id="kiosk" name="kiosk" class="desktop-only" type="checkbox">
         <label for="pin">Settings PIN</label><input id="pin" name="pin" type="password" inputmode="numeric" placeholder="Leave empty for no PIN" autocomplete="off">
       </div>
       <div class="footer">
-        <button type="button" id="openFolder">Open photos</button>
-        <button type="button" id="quit">Quit</button>
+        <button type="button" id="openFolder" class="desktop-only">Open photos</button>
+        <button type="button" id="quit" class="desktop-only">Quit</button>
         <span class="spacer"></span>
         <button type="button" id="cancelSettings">Cancel</button>
         <button value="save" class="primary">Save</button>
@@ -186,6 +202,8 @@
   </dialog>
 
   <script src="layout.js"></script>
+  <script src="booth-defaults.js"></script>
+  <script src="booth-mobile.js"></script>
   <script src="app.js"></script>
   <script src="editor.js"></script>
 </body>

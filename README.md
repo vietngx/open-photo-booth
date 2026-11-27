@@ -3,8 +3,8 @@
 <h1 align="center">Open Photo Booth</h1>
 
 <p align="center">
-  <b>Free, open-source photo booth software for Windows and macOS.</b><br>
-  No account. No subscription. No internet required. Your photos never leave your computer.
+  <b>Free, open-source photo booth software for Windows and macOS, with development builds for Android and iPadOS.</b><br>
+  No account. No subscription. No internet required. Photos are saved on your device.
 </p>
 
 <p align="center">
@@ -37,6 +37,7 @@
 - [FAQ](#faq)
 - [Roadmap](#roadmap)
 - [Development](#development)
+  - [Tablet development](#tablet-development)
 - [Support the project](#support-the-project)
 - [License](#license)
 
@@ -251,11 +252,11 @@ Every session is saved the moment it's captured, before anyone presses a button:
 
 ```
 Pictures/Open Photo Booth/<event name>/
-  20261018-201530.jpg          ← the finished layout
-  20261018-201530_1.jpg        ← individual shots, full camera resolution
-  20261018-201530_2.jpg
+  20261018-201530-123.jpg          ← the finished layout
+  20261018-201530-123_1.jpg        ← individual shots, full camera resolution
+  20261018-201530-123_2.jpg
   ...
-  20261018-201530_print.jpg    ← the 2-up print sheet (strips only, when printed)
+  20261018-201530-123_print.jpg    ← the 2-up print sheet (strips only, when printed)
 ```
 
 Use **Settings → Open photos** to jump to the folder. Change the location with **Save photos to**, for example to a USB drive or a synced folder.
@@ -327,12 +328,14 @@ npm run e2e    # drive the real app with a fake camera: session, PIN, layout edi
 npm run dist   # build installers for your OS into dist/
 ```
 
-The app is deliberately small and dependency-free at runtime:
+The desktop and tablet builds share the same screens, layout model and editor.
 
 | File | Purpose |
 |---|---|
 | `main.js` | Electron main process: window, settings, file storage, templates, printing |
 | `preload.js` | The small, explicit API the UI may call (`window.booth`) |
+| `booth-defaults.js` | Default settings shared by Electron and Capacitor |
+| `booth-mobile.js` | Tablet implementation of `window.booth`. Stores settings and layouts locally and calls the native photo and print services |
 | `index.html` | Screens, settings dialog, layout editor markup and styles |
 | `app.js` | Booth flow: camera, countdown, capture, compositing, review, printing, settings |
 | `editor.js` | The visual layout editor |
@@ -350,6 +353,24 @@ git tag v0.2.0 && git push origin main v0.2.0
 GitHub Actions builds the macOS (Apple Silicon and Intel) and Windows installers and publishes them on the Releases page with the changelog entry as release notes.
 
 Contributions are welcome: open an issue to discuss bigger changes, keep pull requests focused, and run `npm test` and `npm run e2e` before submitting.
+
+### Tablet development
+
+The `feature/ipados` branch contains the Android Studio and Xcode projects. From the project root, run the following commands with Node.js 22 or newer and its package manager npm.
+
+```bash
+npm ci
+npm run sync:mobile
+```
+
+Open `android/` in Android Studio or `ios/App/App.xcodeproj` in Xcode, select a tablet and run the app. The iPad target requires iPadOS 15.4 or later. On older Android tablets, update Android System WebView or Chrome so the embedded browser supports the layout editor. Run `npm run sync:mobile` after changing the web code or bundled templates. It rebuilds the generated `www/` directory and copies it into both projects.
+
+The guest flow, camera selection, countdown, filters, photo composition and layout editor run from the same JavaScript files as the desktop app. On a tablet the default camera preference is front-facing. Allow camera access on first use. The app releases the camera in the background and requests it again when you return.
+
+- **Settings and layouts** persist in the app’s local IndexedDB database. The four built-in layouts work offline. To import a template, select its layout file (Extensible Markup Language, `template.xml`) and its referenced images together in the file picker. The editor saves built-in changes as a new user layout.
+- **Saved photos** appear under **Files → On My iPad → Open Photo Booth → event name** on iPad and **Pictures → Open Photo Booth → event name** on Android. Each session writes the individual shots and the finished layout. Android 7–9 also asks for storage access.
+- **Printing** opens the system print dialog with the composed photo. Choose the printer, paper and copy count there. The two-up option places two copies of a strip on one sheet. Enabling **Open print dialog after capture** presents the dialog for every session.
+- **Testing** includes `npm test` for template geometry, `npm run test:mobile` for the tablet interface with simulated native services, and `npm run e2e` for the desktop capture and editor flow. To check event hardware, capture a session on each physical tablet, reopen its saved layout and print a sheet on the intended printer to confirm paper size and margins.
 
 ## Support the project
 
