@@ -56,7 +56,7 @@ async function createLayouts() {
   const png = await new Promise(resolve => document.createElement('canvas').toBlob(resolve, 'image/png'))
   const image = new File([png], 'frame one.png', { type: 'image/png' })
 
-  Editor.open('builtin:single')
+  Editor.open('builtin:classic-strip')
   selectFiles([image])
   document.querySelector('[data-add="Image"]').click()
   await until(() => document.querySelector('#edProps [data-key="src"]')?.textContent === image.name, 'Editor did not pick an image')
@@ -74,7 +74,7 @@ async function createLayouts() {
   selectFiles([new File([xml], 'template.xml', { type: 'text/xml' }), image])
   const imported = await booth.importTemplate()
   check(imported && imported !== copy, 'Import did not create a separate layout')
-  await booth.saveSettings({ ...await booth.getSettings(), eventName: 'Tablet test', templateId: imported, countdown: 1 })
+  await booth.saveSettings({ ...await booth.getSettings(), eventName: 'Tablet test', templateId: imported, countdown: 1, betweenShots: 0 })
   return { copy, imported }
 }
 
@@ -107,14 +107,21 @@ async function checkAfterReload({ copy, imported }) {
   await until(() => !cameraPending && video.readyState >= 2, 'Simulated camera preview did not start')
   await startSession()
   check(screen() === 'review', 'Capture did not reach the photo review')
+  const photo = document.querySelector('#result'), actions = document.querySelector('#review .actions')
+  await photo.decode()
+  check(photo.naturalHeight > photo.naturalWidth && photo.getBoundingClientRect().bottom <= actions.getBoundingClientRect().top,
+    'Portrait strip extends into the review controls')
+  const print = document.querySelector('#print'), bounds = print.getBoundingClientRect()
+  check(document.elementFromPoint(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2) === print,
+    'The center of the Print button cannot receive a tap')
   const saved = await current.saved
   check(savedNames.includes(saved.stamp + '_1.jpg') && savedNames.includes(saved.stamp + '.jpg'), 'Session lost its original or layout')
   check(lastSave.data.startsWith('/9j/') && lastSave.name.endsWith('.jpg'), 'Session did not save a JPEG')
   await printCurrent()
-  check(!document.querySelector('#print').disabled, 'Print button unavailable after cancellation')
+  check(!print.disabled, 'Print button unavailable after cancellation')
   window.printCancelled = false
   await printCurrent()
-  check(document.querySelector('#print').disabled && lastPrint.file === saved.file, 'Could not retry the saved layout print')
+  check(print.disabled && lastPrint.file === 'content://media/' + saved.stamp + '_print.jpg', 'Could not retry the two-up strip print')
 }
 
 async function run() {
@@ -126,7 +133,7 @@ async function run() {
   })
   const preload = path.join(profile, 'test-bridge.cjs')
   writeFileSync(preload, `require('electron').contextBridge.executeInMainWorld({ func: ${installTestBridge} })`)
-  const win = new BrowserWindow({ show: false, webPreferences: { preload, backgroundThrottling: false } })
+  const win = new BrowserWindow({ show: false, width: 768, height: 1024, useContentSize: true, webPreferences: { preload, backgroundThrottling: false } })
   const web = win.webContents
   const url = 'booth-test://localhost/index.html'
   await win.loadURL(url)
