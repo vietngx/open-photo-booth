@@ -6,7 +6,7 @@ const root = fileURLToPath(new URL('../', import.meta.url))
 const output = path.join(root, 'www')
 const staging = mkdtempSync(path.join(root, '.www-'))
 const templateRoot = path.join(root, 'templates')
-const renderer = ['index.html', 'booth-defaults.js', 'booth-mobile.js', 'app.js', 'editor.js', 'layout.js']
+const renderer = ['tablet/index.html', 'tablet/app.js', 'booth-defaults.js', 'booth-mobile.js', 'booth-renderer.js', 'editor.js', 'layout.js']
 
 // Web views cannot enumerate packaged directories. Index each layout and its local images.
 function bundleTemplate(folder) {
@@ -32,7 +32,7 @@ function bundleTemplate(folder) {
 }
 
 try {
-  for (const name of renderer) copyFileSync(path.join(root, name), path.join(staging, name))
+  for (const name of renderer) copyFileSync(path.join(root, name), path.join(staging, path.basename(name)))
   const folders = readdirSync(templateRoot, { withFileTypes: true })
     .filter(entry => entry.isDirectory() && !entry.name.startsWith('.'))
     .map(entry => entry.name).sort()

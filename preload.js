@@ -16,4 +16,36 @@ contextBridge.exposeInMainWorld('booth', {
   chooseFolder: () => ipcRenderer.invoke('dialog:folder'),
   openFolder: () => ipcRenderer.invoke('shell:open'),
   quit: () => ipcRenderer.invoke('app:quit'),
+  listEvents: () => ipcRenderer.invoke('events:list'),
+  newEvent: () => ipcRenderer.invoke('events:new'),
+  switchEvent: id => ipcRenderer.invoke('events:switch', id),
+  removeEvent: id => ipcRenderer.invoke('events:remove', id),
+  logSession: entry => ipcRenderer.invoke('session:log', entry),
+  listImages: kind => ipcRenderer.invoke('images:list', kind),
+  listLuts: () => ipcRenderer.invoke('luts:list'),
+  shareBase: () => ipcRenderer.invoke('share:base'), // where this session's share link starts ('' when sharing is off)
+  shareLocal: () => ipcRenderer.invoke('share:local'), // the same for sharing over the local network, for the settings
+  sharePhoto: req => ipcRenderer.invoke('share:photo', req),
+  loadModel: name => ipcRenderer.invoke('model:load', name),
+  openRepo: () => ipcRenderer.invoke('app:repo'),
+  openMore: () => ipcRenderer.invoke('app:more'),
+  camera: {
+    list: () => ipcRenderer.invoke('camera:list'),
+    open: id => ipcRenderer.invoke('camera:open', id),
+    close: () => ipcRenderer.invoke('camera:close'),
+    shoot: () => ipcRenderer.invoke('camera:shoot'),
+    focus: () => ipcRenderer.invoke('camera:focus'),
+    live: on => ipcRenderer.invoke('camera:live', on),
+    status: () => ipcRenderer.invoke('camera:status'),
+    props: () => ipcRenderer.invoke('camera:props'),
+    set: (key, index) => ipcRenderer.invoke('camera:set', key, index),
+    sim: what => ipcRenderer.invoke('camera:sim', what), // tests: unplug, plug, crash or hang the simulated camera
+  },
+  onCameraFrame: fn => ipcRenderer.on('camera:frame', (_e, jpeg) => fn(jpeg)),
+  update: {
+    status: () => ipcRenderer.invoke('update:status'),
+    install: () => ipcRenderer.invoke('update:install'),
+  },
+  onUpdate: fn => ipcRenderer.on('update:status', (_e, s) => fn(s)),
+  onCameraState: fn => ipcRenderer.on('camera:state', (_e, s) => fn(s)),
 })

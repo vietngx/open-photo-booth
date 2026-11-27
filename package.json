@@ -1,38 +1,72 @@
 {
   "name": "open-photo-booth",
   "productName": "Open Photo Booth",
-  "version": "0.1.0",
+  "version": "0.4.1",
   "description": "Free, open-source photo booth for Windows and macOS.",
   "main": "main.js",
   "license": "MIT",
   "scripts": {
+    "build:faceswap": "node scripts/build-faceswap.mjs",
+    "build:camera": "node scripts/build-camera.mjs",
+    "build": "npm run build:faceswap && npm run build:camera",
+    "prestart": "npm run build",
     "start": "electron .",
     "test": "node test.js",
+    "pree2e": "npm run build",
     "e2e": "node e2e.mjs",
+    "predist": "npm run build",
     "dist": "electron-builder",
+    "dist:signed": "npm run dist -- -c.mac.identity=\"$CSC_NAME\" -c.mac.hardenedRuntime=true -c.mac.entitlements=build/entitlements.mac.plist -c.mac.entitlementsInherit=build/entitlements.mac.plist",
     "build:mobile": "node scripts/build-mobile.mjs",
     "test:mobile": "npm run build:mobile && electron scripts/test-mobile.cjs",
     "build:ios": "npm run build:mobile",
     "sync:mobile": "npm run build:mobile && cap sync"
   },
   "devDependencies": {
-    "@capacitor/cli": "^8.6.3",
-    "electron": "^44.11.6",
-    "electron-builder": "^26.18.0"
+    "browser-inswapper": "github:robert-schmidt/browser-inswapper#25ea3b1d7d93e2fe1629bd1580d3c22496f840ac",
+    "electron": "44.5.1",
+    "electron-builder": "26.15.3",
+    "esbuild": "0.28.2",
+    "@capacitor/cli": "^8.6.3"
   },
   "build": {
     "appId": "org.openphotobooth.app",
     "productName": "Open Photo Booth",
     "files": [
       "main.js",
+      "booth-defaults.js",
       "preload.js",
       "index.html",
-      "booth-defaults.js",
-      "booth-mobile.js",
+      "booth-renderer.js",
       "app.js",
       "editor.js",
       "layout.js",
-      "templates/**"
+      "events.js",
+      "events-ui.js",
+      "enhance.js",
+      "review.js",
+      "capture.js",
+      "ai.js",
+      "swap.js",
+      "setup.js",
+      "camera.js",
+      "cameras.js",
+      "local-share.js",
+      "update.js",
+      "update-ui.js",
+      "vendor/faceswap/**",
+      "fx.js",
+      "models/**",
+      "!node_modules/@mediapipe/tasks-vision/**/*.map",
+      "!node_modules/@mediapipe/tasks-vision/vision_bundle.{cjs,mjs}",
+      "!node_modules/@mediapipe/tasks-vision/wasm/vision_wasm_module_internal.*",
+      "!node_modules/qrcode-generator/{experiment,test}/**",
+      "!node_modules/qrcode-generator/**/*.mjs",
+      "!node_modules/qrcode-generator/dist/qrcode_{SJIS,UTF8}.js",
+      "templates/**",
+      "site/icon.png",
+      "site/cameras.js",
+      "THIRD_PARTY_NOTICES.md"
     ],
     "mac": {
       "category": "public.app-category.photography",
@@ -43,10 +77,18 @@
             "arm64",
             "x64"
           ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "arm64",
+            "x64"
+          ]
         }
       ],
       "extendInfo": {
-        "NSCameraUsageDescription": "Open Photo Booth uses the camera to take photos of your guests."
+        "NSCameraUsageDescription": "Open Photo Booth uses the camera to take photos of your guests.",
+        "NSMicrophoneUsageDescription": "Open Photo Booth records sound for guests' video messages."
       },
       "identity": "-",
       "hardenedRuntime": false
@@ -58,7 +100,31 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true
     },
-    "artifactName": "Open-Photo-Booth-${version}-${os}-${arch}.${ext}"
+    "artifactName": "Open-Photo-Booth-${version}-${os}-${arch}.${ext}",
+    "extraResources": [
+      {
+        "from": "camera-helper/build/${os}",
+        "to": "camera-helper",
+        "filter": [
+          "bin/**",
+          "Frameworks/**"
+        ]
+      }
+    ],
+    "electronFuses": {
+      "runAsNode": false,
+      "enableCookieEncryption": true,
+      "enableNodeOptionsEnvironmentVariable": false,
+      "enableNodeCliInspectArguments": false,
+      "enableEmbeddedAsarIntegrityValidation": true,
+      "onlyLoadAppFromAsar": true,
+      "grantFileProtocolExtraPrivileges": false
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "robert-schmidt",
+      "repo": "open-photo-booth"
+    }
   },
   "author": "Open Photo Booth contributors",
   "homepage": "https://github.com/robert-schmidt/open-photo-booth",
@@ -67,8 +133,14 @@
     "url": "https://github.com/robert-schmidt/open-photo-booth.git"
   },
   "dependencies": {
+    "@mediapipe/tasks-vision": "^1.1.1",
+    "electron-updater": "6.8.10",
+    "qrcode-generator": "^2.0.4",
     "@capacitor/android": "^8.6.3",
     "@capacitor/core": "^8.6.3",
     "@capacitor/ios": "^8.6.3"
+  },
+  "booth": {
+    "models": "https://github.com/robert-schmidt/open-photo-booth/releases/download/face-models/"
   }
 }

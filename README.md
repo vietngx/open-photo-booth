@@ -4,7 +4,7 @@
 
 <p align="center">
   <b>Free, open-source photo booth software for Windows and macOS, with development builds for Android and iPadOS.</b><br>
-  No account. No subscription. No internet required. Photos are saved on your device.
+  No account. No subscription. Photos are saved on your device.
 </p>
 
 <p align="center">
@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/badge/platforms-Windows%20%7C%20macOS-555" alt="Windows and macOS">
 </p>
 
-<p align="center"><img src="docs/review.jpg" width="820" alt="Review screen after a photo session"></p>
+<p align="center"><img src="docs/review.jpg" width="820" alt="The editing screen after a photo session: looks, backgrounds, stickers, retake, print"></p>
 
 ---
 
@@ -22,12 +22,14 @@
 - [Why Open Photo Booth?](#why-open-photo-booth)
 - [Who is it for?](#who-is-it-for)
 - [Features](#features)
+- [Looking for more? Try Boothini](#looking-for-more-try-boothini)
 - [Download and install](#download-and-install)
 - [Quick start](#quick-start)
 - [How to use it](#how-to-use-it)
   - [The guest experience](#the-guest-experience)
   - [Operator controls and settings](#operator-controls-and-settings)
   - [Cameras](#cameras)
+  - [Face swap](#face-swap)
   - [Layouts and the layout editor](#layouts-and-the-layout-editor)
   - [Printing](#printing)
   - [Where your photos go](#where-your-photos-go)
@@ -66,18 +68,38 @@ Open Photo Booth is the opposite:
 
 | | |
 |---|---|
-| **Guest flow** | Touch-to-start screen with a live, mirrored preview, then a big countdown, a flash effect and a review screen with Retake / Print / Done |
+| **Guest flow** | Touch-to-start screen with a live, mirrored preview, then a big countdown framed like the photo, a flash and an editing screen that finishes by itself |
+| **Setup guide** | On first launch and for every new event, a few steps name the event, pick its layout and choose what guests can do |
+| **Events** | As many events as you like, each with its own settings, dated photo folder and session count; switch between them in the settings |
+| **Photos, boomerangs, videos** | Guests take photos, a boomerang (saved as MP4, with a flip-book print) or a video message with sound. You choose which are on offer |
+| **Editing screen** | Guests pick a look for all photos or one, retake a single photo, change the background, add stickers and face props, then Print or Done |
+| **Looks** | Black & white, sepia, warm, vivid, faded, comic and sketch, shown as thumbnails of the guest's own photo, plus auto-enhance |
+| **Backgrounds** | Blur, studio and themed backdrops or your own images, cut out on the booth itself; or a real green screen with adjustable tolerance |
+| **Glam and no-blink** | Light or strong skin smoothing, and the booth keeps the frame where nobody blinked |
+| **Stickers and props** | Emoji and your own PNGs, moved, resized and turned with fingers; glasses, hats and crowns land on every face |
+| **Face swap** | Guests put their faces into your scenes (posters, characters, covers), or become a character live on the start screen. Runs on the booth, after a one-time download of its models, see [Face swap](#face-swap) |
+| **Camera control** | Recent Sony and Nikon Z cameras over USB (beta): live view, the camera's own shutter and flash, full-resolution files |
 | **Multi-shot sessions** | The layout decides how many photos are taken (1–N), with a pause between shots |
 | **Layouts** | Classic 2×6 strip, postcard (1 large + 3 small), grid of four and single photo, plus your own |
 | **Layout editor** | Create, edit, duplicate and delete layouts visually: photo slots, text, images/overlays, rectangles and ellipses. Drag to move and resize, adjust colours, opacity, borders, shadows, rotation and layer order, with undo/redo |
 | **Template import** | Import any folder with a `template.xml` (the format used by dslrBooth/LumaBooth-style templates) |
 | **Text placeholders** | `{event}` and `{date}` are filled in automatically; text shrinks to fit its box |
-| **Filters** | None, black & white, sepia, warm, vivid, faded, with a live preview in settings |
 | **Printing** | Any printer your OS supports (dye-sub, inkjet, laser). Silent printing to a chosen printer, auto-print, copies, and 2×6 strips printed 2-up on 4×6 paper |
-| **Storage** | Each session is saved immediately (individual shots and the final layout) in a folder per event |
-| **Kiosk mode** | Fullscreen, the display never sleeps, settings hidden behind a long-press, optional PIN |
+| **Storage** | Each session is saved immediately (individual shots and the final layout) in a dated folder per event, with originals, prints and videos in folders of their own |
+| **Kiosk mode** | Fullscreen, the display never sleeps, settings behind the ⚙️ button and an optional PIN |
 | **Buttons and pedals** | `Space` / `Enter` start a session, so USB foot pedals, arcade buttons and wireless presenters work out of the box |
-| **Cameras** | Any webcam, or a DSLR/mirrorless camera through its webcam utility or an HDMI capture card |
+| **Other cameras** | Any webcam, or any DSLR/mirrorless camera through its webcam utility or an HDMI capture card |
+
+## Looking for more? Try Boothini
+
+[**Boothini**](https://boothini.com/) is Open Photo Booth with online extras, from the same developer. Everything on this page is in it, and it adds:
+
+- **AI magic.** Guests turn their photo into pop art, anime, an oil painting, a 3D cartoon, a superhero or a vintage portrait, in about 15 seconds. For a themed event, every photo can get one style by itself.
+- **Photos from anywhere.** A QR code that works on any phone, with no shared Wi-Fi; the photo by email; and a gallery page for the whole event, kept for 90 days.
+
+Boothini is free to download for macOS and Windows, with no plan and no subscription. Credits pay for the online extras, only when you use them: 1 credit for an AI photo, 50 credits for an event shared online. An account comes with 30 credits, and its first shared event is free.
+
+Open Photo Booth stays free and open source, and nothing in it needs an account.
 
 ## Download and install
 
@@ -89,59 +111,105 @@ Download the latest version from the **[Releases page](https://github.com/robert
 | macOS, Intel | `Open-Photo-Booth-<version>-mac-x64.dmg` |
 | Windows 10 / 11 (64-bit) | `Open-Photo-Booth-<version>-win-x64.exe` |
 
-**macOS:** open the `.dmg` and drag **Open Photo Booth** into **Applications**. The app is free and not signed with a paid Apple developer certificate, so the first launch needs one extra step: right-click the app → **Open** → **Open**. If macOS still refuses, go to **System Settings → Privacy & Security** and click **Open Anyway**. Allow camera access when asked.
+**macOS:** open the `.dmg` and drag **Open Photo Booth** into **Applications**. From 0.3.2 the app is signed and notarized by Apple, so it opens like any other app. Allow camera access when asked.
 
 **Windows:** run the installer. If SmartScreen shows "Windows protected your PC", click **More info → Run anyway**. Make sure **Settings → Privacy & security → Camera → Let desktop apps access your camera** is on.
 
 ## Quick start
 
 1. **Connect** your camera (and printer, if you print).
-2. **Start** Open Photo Booth. You'll see the live camera and a "Touch to start" button.
-3. **Open settings** by holding the **top-right corner** of the screen for 1.5 seconds, or pressing **Ctrl + ,** (Windows) / **Cmd + ,** (Mac).
-4. **Set** your event name, camera, layout and printer, then **Save**.
+2. **Start** Open Photo Booth. The first time, a short **setup guide** asks for the event's name, its layout and what guests can do.
+3. The start screen appears with the live camera. **Open settings** with the **⚙️ in the top-right corner**, or by pressing **Ctrl + ,** (Windows) / **Cmd + ,** (Mac).
+4. **Set** your camera and printer, then **Save**.
 5. Turn on **Fullscreen kiosk**, step back, and let your guests have fun.
+
+<p align="center"><img src="docs/setup.jpg" width="410" alt="The setup guide: name the event"> <img src="docs/setup-guests.jpg" width="410" alt="The setup guide: what guests can do"></p>
 
 ## How to use it
 
 ### The guest experience
 
-1. The **start screen** shows the live camera with your event name and a pulsing start button. Guests tap anywhere, or press a connected button or pedal.
-2. A **countdown** appears for each photo, followed by a flash. "Photo 2 of 4" shows how many photos are left.
-3. The **review screen** shows the finished layout:
-   - **Retake** starts over. The previous photos are still kept on disk.
+<p align="center"><img src="docs/modes.jpg" width="410" alt="Start screen: photos, boomerang or video message"> <img src="docs/review.jpg" width="410" alt="Editing screen: looks, backgrounds, stickers, retake"></p>
+
+1. The **start screen** shows the live camera with your event name. Guests tap anywhere, or press a connected button or pedal. If the event offers boomerangs or video messages too, they pick one of three big buttons.
+2. A **countdown** appears for each photo, with the preview cut to the shape of the photo, followed by a flash. "Photo 2 of 4" shows how many photos are left.
+3. The **editing screen** shows the finished layout, with whichever tools the event allows:
+   - **Look**, **Background**, **Face swap** and **Stickers** apply to all photos; tap one photo to change only that one.
+   - **Retake** replaces a single photo and keeps the other edits.
    - **Print** prints the layout (once per session, so prints aren't wasted).
-   - **Done** returns to the start screen. If nobody touches anything, the booth returns there automatically after the review time.
+   - **Done** returns to the start screen. If nobody touches anything, the booth finishes by itself after the idle time, shown as a shrinking bar on the Done button.
 
 ### Operator controls and settings
 
-Open settings by **holding the top-right corner for 1.5 seconds** or pressing **Ctrl/Cmd + ,**. If you set a PIN, it's asked for first.
+Open settings with the **⚙️ in the top-right corner of the start screen** or by pressing **Ctrl/Cmd + ,**. Guests can tap the ⚙️ too, so set a **Settings PIN** for an event (the setup guide offers it); it's asked for first.
 
 <p align="center"><img src="docs/settings.jpg" width="720" alt="Settings"></p>
 
 | Setting | What it does |
 |---|---|
-| **Event name** | Shown on the start screen, used for `{event}` in layouts and as the folder name for this event's photos |
+| **Event**, **New**, **Remove** | The event in use. **New** starts another one as a copy of the current event and opens the setup guide. **Remove** takes an event off the list; its photos stay |
+| **Event name** | Shown on the start screen, used for `{event}` in layouts and in the name of this event's photo folder |
 | **Start button text** | The text on the start button ("Touch to start", "Tap for photos!", in any language) |
-| **Camera** | Which camera to use; *Default camera* uses the system default |
+| **Start screen pictures** | A folder of images shown on the start screen in place of the camera view: one is a background, several play as a slideshow until a guest starts. (Not with live face swap characters, where guests need to see themselves) |
+| **Camera** | Which camera to use. A camera the booth controls is marked *controlled over USB*; the line below says what the camera in use delivers, and **Test shot** takes one photo with it |
+| **Microphone** | For video messages |
 | **Mirror camera** | Flips the preview and photos like a mirror (what most guests expect) |
 | **Layout** | The layout used for sessions; the preview below updates as you choose. **Import…** adds a template folder; **Edit layouts…** opens the layout editor |
-| **Filter** | Colour filter applied to the photos in the layout (the preview shows it) |
+| **Default look** | The look photos start with; guests can change it if **Guests pick a look** is on |
+| **Auto-enhance photos** | Fixes washed-out or tinted photos automatically |
+| **Glam** | Skin smoothing: off, light or strong |
+| **Default background** | Replaces what's behind the guests, with no green screen needed |
+| **Green screen**, **tolerance** | For a real green backdrop: how much green is cut out |
+| **Pick the frame without blinks** | Takes a few frames per photo and keeps the best |
 | **Countdown** | Seconds counted down before each photo (0 = instant) |
 | **Pause between photos** | Seconds between shots in a multi-photo session so guests can change poses |
-| **Review screen** | Seconds before the review screen returns to the start screen on its own |
+| **Finish after no touch for** | Seconds of no touch before the editing screen finishes on its own |
 | **Save photos to** | The main photos folder; each event gets a subfolder |
+| **Guests can make** | Photos, boomerangs, video messages (and the video's length) |
+| **Your looks** | A folder of `.cube` colour presets (3D LUTs, as Resolve, Photoshop and most grading tools export). Each file becomes a look for photos, named after the file, for guests and as the event's default look. Boomerangs and videos keep the built-in looks |
+| **Guest tools** | Which tools guests see: looks, retake, backgrounds, stickers, drawing. Fewer tools keep a long queue moving. Point **Your backgrounds** and **Your stickers** at folders of your own images. With **draw and sign** on, guests write on their photos with a finger, in six colours and three pen widths |
+| **Guests get their photo on their phone** | A **Share** button on the editing screen shows a QR code; scanning it opens the photo, boomerang or video on the guest's phone, served by this computer. See [Photos to phones](#photos-to-phones) |
 | **Printer** | *Ask each time* shows the print dialog; choosing a printer prints silently |
 | **Copies** | Copies per print |
 | **Print automatically** | Prints every session without anyone pressing Print |
 | **Print strips 2-up (4×6)** | Prints a 2×6 strip twice side by side on 4×6 paper, ready to cut in half |
 | **Fullscreen kiosk** | Locks the booth fullscreen. Use **Quit** in settings to close the app |
+| **Get new versions automatically** | On by default: every few hours the app asks this project's GitHub releases for a new version, downloads it, and installs it once the start screen has been untouched for 15 minutes (or when you quit). Never during a session. Turn it off for a booth that must not change mid-season; it counts from the next start |
 | **Settings PIN** | If set, the PIN is required to open settings; leave empty to disable |
+
+The camera, microphone, printer, photos folder, kiosk mode and PIN belong to the computer; everything else is kept per event.
 
 The settings window also has **Open photos** (opens the current event folder) and **Quit**.
 
 ### Cameras
 
-Open Photo Booth uses your operating system's camera system, so anything that shows up as a camera works:
+There are two ways a camera reaches the booth.
+
+**1. Controlled over USB (beta).** The booth runs the camera itself: its live view is the preview, its own shutter (and flash) takes the photo, and the camera's full-resolution file is what's saved. Plug the camera in by USB, switch it on, and pick the entry marked *controlled over USB* under **Settings → Camera**. The full model list is in the app, under the camera picker.
+
+| Maker | Cameras | Before you plug in |
+|---|---|---|
+| Sony | α1, α1 II, α9 II, α9 III, α7 IV, α7 V, α7C, α7C II, α7CR, α7R IV, α7R IVA, α7R V, α7R VI, α7S III, α6700, ZV-E1, ZV-E10 II, FX2, FX3, FX3A, FX30, RX1R III, RX0 II, ILX-LR1 | Set the camera's USB mode to **Remote Shoot (PC Remote)**. On Windows, install Sony's USB driver |
+| Nikon | Z9, Z8, Zf, Z7II, Z7, Z6III, Z6II, Z6, Z5II, Z5IIC, Z5, Z50II, Z50, Z30, Zfc, ZR | Quit NX Tether and Camera Control Pro |
+| Canon | Not controlled yet | Use webcam mode (below) |
+
+Good to know:
+
+- Set the camera to save JPEG (or RAW + JPEG), turn its auto power off off, and use a dummy battery for long events.
+- With studio flashes, live view looks dark, because the exposure is set for the flash. Sony: set **Live View Display** to **Setting Effect Off**. Nikon: turn **Apply settings to live view** off (on newer bodies, **View mode (photo Lv)** → **Adjust for ease of viewing**).
+- Sony's silent shutter (Silent Mode) keeps the flash from firing: leave it off.
+- The booth focuses at "1" in the countdown. **Settings → Camera → Test shot** checks focus, exposure and flash before guests arrive.
+- **Camera settings** appear under **Settings → Camera** once a controlled camera is in use: exposure mode, ISO, shutter speed, aperture, brightness, white balance, flash and flash strength. They are the camera's own settings, so a change takes effect at once and stays in the camera. Anything greyed out is decided on the camera (its mode dial, or the exposure mode).
+  - **Auto** lets the camera work out the exposure for every photo, with its flash on if it has one. Good for a room where the light changes.
+  - **Set exposure from test shots** takes a few test shots and adjusts the camera until they come out right. With the camera in **M** it changes the ISO and leaves your shutter and aperture alone, which is how to set up studio flashes; in the other modes it changes the brightness (exposure compensation).
+  - **Flash:** a flash on the camera fires with the camera's shutter. Live view can't show a flash, so judge it from a test shot. Studio flashes on a radio trigger aren't seen by the camera at all: use **M**, about 1/125 s, and set the exposure from test shots.
+- If the camera is unplugged or its battery dies mid-event, the booth carries on with a webcam and switches back when the camera returns.
+- Live view pauses after 10 idle minutes on the start screen to keep the camera cool, and resumes at the next touch.
+- This is new. The camera code is written against Sony's and Nikon's SDKs and checked with a simulated camera, but has had little time on real bodies, and the Windows side is untested. Please [report](https://github.com/robert-schmidt/open-photo-booth/issues) what works and what doesn't, with your camera model.
+- The **macOS downloads** control cameras. The **Windows download doesn't yet** (its camera code hasn't been built on Windows): there, every camera works in webcam mode.
+- Camera control needs a build that includes the makers' SDKs. They can't be kept in this repository, so a build from source has none unless you add them (see [Development](#development)); such a build still works with every camera in webcam mode.
+
+**2. Webcam mode.** Open Photo Booth also uses your operating system's camera system, so anything that shows up as a camera works:
 
 - **Webcams.** Any USB webcam or the built-in one. A 1080p or 4K webcam with good light gives great results; the booth asks the camera for up to 4K.
 - **DSLR and mirrorless cameras.** Install your camera maker's free webcam utility, connect the camera by USB, and choose it under **Settings → Camera**:
@@ -153,6 +221,25 @@ Open Photo Booth uses your operating system's camera system, so anything that sh
 - **HDMI capture cards.** Most cameras with a clean HDMI output work through an inexpensive HDMI-to-USB capture card and show up as a webcam.
 
 Tips: light matters more than the camera. One soft light in front of guests (a ring light or softbox) makes a huge difference. Use a tripod and keep the camera at eye level.
+
+### Face swap
+
+Guests put their own faces into your **scenes**: film posters, characters, magazine covers, any image with one face or more. On the editing screen they pick a scene, and **Swap places** moves a group along the scene's faces. With **Also live** on, guests can also pick a character on the start screen and see it move with their face, in photos, boomerangs and videos.
+
+To turn it on:
+
+1. Under **Settings → Face swap** (or in the setup guide), tick **Offer face swap to guests**.
+2. Put your scene images in a folder and choose it under **Your scenes**.
+3. **Save.** The first time, the booth downloads the face swap models: about 450 to 700 MB, depending on its graphics card, so it needs an internet connection this once. The start screen and the settings show the progress. After that, face swap works offline. The very first swap takes a few minutes while the graphics card gets ready; later ones take well under a second.
+
+Setting up at home for a venue without internet? Press **Download now** in the settings there.
+
+Face swap's parts have licences of their own:
+
+- The models are InsightFace's `inswapper_128` and `w600k_r50`. InsightFace publishes them **for non-commercial research only** and licenses commercial use itself (contact@insightface.ai). If you run paid events, get a licence from InsightFace before you use face swap.
+- The face swap code is [browser-inswapper](https://github.com/robert-schmidt/browser-inswapper), published under the PolyForm Noncommercial licence.
+
+Everything runs on the booth. Guests' faces are never sent anywhere.
 
 ### Layouts and the layout editor
 
@@ -251,13 +338,22 @@ The print size comes from the layout (`Width ÷ Resolution` inches), and the ima
 Every session is saved the moment it's captured, before anyone presses a button:
 
 ```
-Pictures/Open Photo Booth/<event name>/
-  20261018-201530-123.jpg          ← the finished layout
-  20261018-201530-123_1.jpg        ← individual shots, full camera resolution
-  20261018-201530-123_2.jpg
-  ...
-  20261018-201530-123_print.jpg    ← the 2-up print sheet (strips only, when printed)
+Pictures/Open Photo Booth/2026-10-18 <event name>/
+  20261018-201530.jpg            ← the finished layouts, with the guests' edits
+  20261018-203012.jpg
+  Originals/
+    20261018-201530_1.jpg        ← individual shots, full camera resolution, unedited
+    20261018-201530_2.jpg
+  Prints/
+    20261018-201530_print.jpg    ← the 2-up print sheets (strips only, when printed)
+  Videos/
+    20261018-203012.mp4          ← boomerangs and video messages
+  sessions.jsonl                 ← one line per session and print, for your own counts
 ```
+
+Files of one session share its timestamp. Settings, the event list and your layouts are kept apart from the photos, in the app's own data folder (macOS `~/Library/Application Support/Open Photo Booth`, Windows `%APPDATA%\Open Photo Booth`).
+
+The folder is named on the event's first photo. An event you already ran with an earlier version keeps its `<event name>` folder.
 
 Use **Settings → Open photos** to jump to the folder. Change the location with **Save photos to**, for example to a USB drive or a synced folder.
 
@@ -271,9 +367,18 @@ Use **Settings → Open photos** to jump to the folder. Change the location with
 - [ ] **Fullscreen kiosk** on and a **Settings PIN** set
 - [ ] At the end: **Settings → Open photos** and copy the event folder somewhere safe
 
+### Photos to phones
+
+With **Guests get their photo on their phone** on, the booth runs a small web server on your computer while the app is open. A guest taps **Share**, scans the QR code, and their phone opens the photo straight from the booth. Nothing goes online.
+
+- **Same network.** The phone must be on the same Wi-Fi as the computer. A venue's guest Wi-Fi often keeps devices from seeing each other; your own travel router, or the computer's hotspot, always works. Neither needs internet.
+- **The first time**, macOS or Windows may ask whether the app may accept incoming connections: allow it.
+- **What can be reached:** only photos and clips of sessions from this run of the app, each behind a link with a random 12-character key. No other file on the computer. The links stop working when the app closes, and the pages are plain HTTP, readable by whoever runs the network.
+- The settings say which address phones reach the booth at, or that the computer isn't on a network.
+
 ## Privacy
 
-Open Photo Booth has **no accounts, no cloud, no analytics and no telemetry**. It makes no network connections. Photos, settings and layouts are stored only on your computer, in the folders listed above. Delete them whenever you like.
+Open Photo Booth has **no accounts, no cloud, no analytics and no telemetry**. It makes two kinds of network connection, both to this project's GitHub page: it asks for new versions every few hours (turn off **Get new versions automatically** to stop that), and if you turn on face swap, it downloads the face swap models once. Sharing to phones, if you turn it on, answers phones on your own network and reaches nothing outside it. Nothing is ever uploaded. Every effect, including background removal and face swap, runs on the booth itself, so no photo ever leaves it. Photos, settings and layouts are stored only on your computer, in the folders listed above. Delete them whenever you like.
 
 ## Troubleshooting
 
@@ -283,36 +388,31 @@ Open Photo Booth has **no accounts, no cloud, no analytics and no telemetry**. I
 | The DSLR doesn't appear | Install and start the maker's webcam utility, set the camera to video/movie mode if required, reconnect USB and restart the booth |
 | The photo looks low-resolution | Some webcam utilities are limited to 1080p. A capture card or a 4K webcam gives more pixels; good light helps the most |
 | Prints have white borders or the wrong size | Set the paper size and borderless printing in the printer's **default** settings in the OS (silent printing uses them) |
-| macOS: "can't be opened" or "damaged" | Right-click the app → Open; or System Settings → Privacy & Security → Open Anyway. As a last resort: `xattr -cr "/Applications/Open Photo Booth.app"` |
+| macOS: "can't be opened" or "damaged" (versions before 0.3.2, which weren't signed) | Right-click the app → Open; or System Settings → Privacy & Security → Open Anyway. As a last resort: `xattr -cr "/Applications/Open Photo Booth.app"` |
 | Windows SmartScreen warning | Click **More info → Run anyway** (the app isn't signed with a paid certificate) |
 | Forgot the settings PIN | Quit the app (Alt+F4 / Cmd+Q) and clear the `"pin"` value in `settings.json`: macOS `~/Library/Application Support/Open Photo Booth/settings.json`, Windows `%APPDATA%\Open Photo Booth\settings.json` |
 
 ## FAQ
 
-**Is it really free, also for commercial use?** Yes. It's MIT-licensed: use it at paid events, in a rental business, or as the base for your own product.
+**Is it really free, also for commercial use?** Yes. It's MIT-licensed: use it at paid events, in a rental business, or as the base for your own product. One part is the exception: **face swap** uses a library and models whose public licences are for non-commercial use, see [Face swap](#face-swap).
 
-**Do I need an account or an internet connection?** No, never.
+**Do I need an account or an internet connection?** No account, ever. No internet either, except once if you turn on face swap, to download its models.
 
 **Does it add a watermark?** No. Add your own logo with an Image element if you want one.
 
-**Can it control my DSLR directly (settings, autofocus, full-resolution capture)?** Not yet. Today a DSLR works through its webcam utility. Direct camera control is on the roadmap.
+**Can it control my DSLR or mirrorless camera directly (autofocus, flash, full-resolution capture)?** Yes for recent Sony and Nikon Z cameras, in beta: see [Cameras](#cameras). Canon and older bodies work through their webcam utility or an HDMI capture card for now.
 
 **Does it run on Linux or a Raspberry Pi?** It's built with Electron, so it may run from source on Linux, but only Windows and macOS are tested and released.
 
-**Can guests get their photos on their phone?** Not yet. QR-code sharing over the local network is on the roadmap.
+**Can guests get their photos on their phone?** Yes, by QR code, when their phone is on the same Wi-Fi as the booth: see [Photos to phones](#photos-to-phones). Nothing goes online. For a QR code that works from anywhere, and photos by email, there is [Boothini](#looking-for-more-try-boothini).
 
 ## Roadmap
 
 Ideas for future versions (contributions welcome):
 
-- GIF and boomerang capture
-- QR-code sharing to guests' phones over local Wi-Fi (still no cloud)
-- Green screen / background replacement
-- Direct DSLR control (gPhoto2 / vendor SDKs) with full-resolution capture
-- Start screen backgrounds and attract-mode slideshow
-- Retake a single photo within a session
-- `.cube` colour presets (LUT filters)
-- Stickers and on-screen drawing
+- Direct camera control for Canon, Nikon DSLRs and older Sony bodies (Sony and Nikon Z are in, in beta)
+- A slideshow of the event's own photos on the start screen
+- `.cube` looks on boomerangs and videos
 
 ## Development
 
@@ -324,39 +424,79 @@ cd open-photo-booth
 npm install
 npm start      # run the app
 npm test       # layout model and template self-check
-npm run e2e    # drive the real app with a fake camera: session, PIN, layout editor
+npm run e2e    # drive the real app with a fake camera: setup guide, sessions, events, editing, boomerangs, PIN, editor
 npm run dist   # build installers for your OS into dist/
 ```
 
-The desktop and tablet builds share the same screens, layout model and editor.
+`npm start`, `npm run e2e` and `npm run dist` first run `npm run build`: it bundles the face swap library into `vendor/` and builds `camera-helper`, which needs a C++ compiler (Xcode's command line tools on macOS, Visual Studio's C++ tools on Windows).
+
+`BOOTH_APP=<path to a built app's executable> npm run e2e` runs the checks against a packaged build.
+
+**Face swap models.** The app downloads them from the address in `package.json` (`booth.models`) the first time face swap is turned on. `BOOTH_MODELS=<folder URL, file:// works>` points it elsewhere; `BOOTH_FACE_MODELS=<folder with the models> npm run e2e` checks the download and the swap without the network.
+
+**Camera SDKs.** Sony's and Nikon's SDKs are free downloads, but their licence agreements don't allow them in a public repository (they may only be shipped inside a built app). Without them everything still builds and runs, with webcams and a simulated camera only. To build camera control in, download and unpack them into `drivers/` (or the folder `BOOTH_DRIVERS` names):
+
+- Sony's [Camera Remote SDK](https://support.d-imaging.sony.co.jp/app/sdk/en/index.html): its `RemoteCli.zip`, unpacked as `drivers/sony/mac/RemoteCli/` and `drivers/sony/win/RemoteCli/`
+- Nikon's [Remote SDK for Z cameras](https://sdk.nikonimaging.com): its `Module` folder as `drivers/nikon/z/Module/` (on macOS, also unzip `Module/Mac/BinaryFile/TestApp.zip` next to itself)
+
+`camera-helper/build/mac/bin/camera-helper probe` tries the first camera it finds without the app: it lists cameras, counts live view frames and takes a photo. `BOOTH_SIM_CAMERA=photo.jpg npm start` adds a simulated camera showing that photo.
+
+Source files for the desktop and tablet builds:
 
 | File | Purpose |
 |---|---|
-| `main.js` | Electron main process: window, settings, file storage, templates, printing |
+| `main.js` | Electron main process: window, settings, file storage, templates, printing, face swap models |
 | `preload.js` | The small, explicit API the UI may call (`window.booth`) |
-| `booth-defaults.js` | Default settings shared by Electron and Capacitor |
-| `booth-mobile.js` | Tablet implementation of `window.booth`. Stores settings and layouts locally and calls the native photo and print services |
-| `index.html` | Screens, settings dialog, layout editor markup and styles |
-| `app.js` | Booth flow: camera, countdown, capture, compositing, review, printing, settings |
+| `booth-renderer.js` | Shared template loading, camera frame capture, photo composition and print layout |
+| `booth-defaults.js`, `booth-mobile.js` | Base settings and the Capacitor adapter for tablet storage and printing |
+| `index.html` | Screens, settings dialog, setup guide, layout editor markup and styles |
+| `app.js` | Booth flow: countdown, photo sessions, compositing, printing, settings |
+| `events.js`, `events-ui.js` | Events: each one's settings, folder and session log (main process), and the picker in the settings |
+| `setup.js` | The setup guide |
+| `review.js` | The editing screen: looks, retake, backgrounds, face swap, stickers and props, drawing, the share sheet |
+| `local-share.js` | Main process: the web server that hands photos to phones on the local network |
+| `update.js`, `update-ui.js` | Automatic updates: the check and download (main process), and their line in the settings |
+| `capture.js` | Boomerangs and video messages |
+| `enhance.js`, `fx.js` | Auto-enhance and `.cube` colour tables; WebGL effects: glam, backgrounds, green screen, comic and sketch |
+| `ai.js` | On-device face and person detection with MediaPipe (bundled, offline) |
+| `swap.js` | Face swap with browser-inswapper |
+| `camera.js` | The camera in the page: a webcam, or a controlled camera's live view and photos |
+| `cameras.js` | Main process: starts `camera-helper`, relays its frames, restarts it when it crashes or hangs |
+| `camera-helper/` | A small C++ program that talks to the makers' SDKs, one backend per maker (`sony.cpp`, `nikon.cpp`), in a process of its own so an SDK crash can't take the booth down |
+| `site/cameras.js` | The list of controlled camera models shown in the settings |
 | `editor.js` | The visual layout editor |
 | `layout.js` | Template model: parse/serialize `template.xml`, colour and fitting maths (shared with tests) |
 | `templates/` | Built-in layouts |
 | `test.js` | Self-check: `npm test` |
 | `e2e.mjs` | End-to-end check in a throwaway profile: `npm run e2e`. `npm run e2e -- docs` also refreshes the README screenshots |
 
-**Releasing:** add your changes to `CHANGELOG.md`, bump `version` in `package.json`, commit, then tag:
+**Versions and the changelog.** Every change that users can notice gets a line under `## [Unreleased]` in `CHANGELOG.md`, in the same commit. Versions follow [Semantic Versioning](https://semver.org/): new features raise the middle number, fixes the last one. `npm test` fails when `package.json`'s version has no dated entry in the changelog.
+
+**Releasing:** rename `[Unreleased]` to the new version with today's date (and start a new empty `[Unreleased]`), set the same version with `npm version <x.y.z> --no-git-tag-version`, commit, then tag:
 
 ```bash
 git tag v0.2.0 && git push origin main v0.2.0
 ```
 
-GitHub Actions builds the macOS (Apple Silicon and Intel) and Windows installers and publishes them on the Releases page with the changelog entry as release notes.
+GitHub Actions then drafts the release with the changelog entry as its notes. The installers are built on your own computer, because the camera SDKs can't be in the repository (`drivers/`, see above), then added to the draft:
+
+```bash
+npm run dist -- --publish never                    # on a Mac: both macOS installers, with camera control
+npx electron-builder --win --x64 --publish never   # Windows, from a Mac: no camera control
+gh release upload v0.2.0 dist/*.dmg dist/*.zip dist/*.exe dist/*.blockmap dist/latest*.yml && gh release edit v0.2.0 --draft=false
+```
+
+The `.zip`, `.blockmap` and `latest*.yml` files are what installed booths update themselves from (`build.publish` in `package.json` names this repository): leave one out and booths on that system stay on the old version. A fork that publishes its own builds should point `build.publish` at its own releases, or remove it to build without updates.
+
+On Windows, `npm run dist -- --publish never` builds the installer with camera control.
+
+The published macOS installers are signed and notarized: `npm run dist:signed -- --publish never` in place of `npm run dist`, with `CSC_NAME` set to the name of a Developer ID Application certificate in the keychain and `APPLE_KEYCHAIN_PROFILE` to a profile stored with `xcrun notarytool store-credentials`. It signs under the hardened runtime (`build/entitlements.mac.plist`). Plain `npm run dist` stays unsigned, for building your own copy.
 
 Contributions are welcome: open an issue to discuss bigger changes, keep pull requests focused, and run `npm test` and `npm run e2e` before submitting.
 
 ### Tablet development
 
-The `feature/ipados` branch contains the Android Studio and Xcode projects. From the project root, run the following commands with Node.js 22 or newer and its package manager npm.
+The `feature/ipados` branch contains the Android Studio and Xcode projects. From the project root, run the following commands with Node.js 24 and its package manager npm.
 
 ```bash
 npm ci
@@ -365,7 +505,7 @@ npm run sync:mobile
 
 Open `android/` in Android Studio or `ios/App/App.xcodeproj` in Xcode, select a tablet and run the app. The iPad target requires iPadOS 15.4 or later. On older Android tablets, update Android System WebView or Chrome so the embedded browser supports the layout editor. Run `npm run sync:mobile` after changing the web code or bundled templates. It rebuilds the generated `www/` directory and copies it into both projects.
 
-The guest flow, camera selection, countdown, filters, photo composition and layout editor run from the same JavaScript files as the desktop app. On a tablet the default camera preference is front-facing. Allow camera access on first use. The app releases the camera in the background and requests it again when you return.
+Android and iPadOS share the camera, capture and print screens in `tablet/`. Both use the desktop layout editor, template loader, photo compositor and two-up print layout. The desktop event manager, local sharing server and tethered camera controls require Electron. On a tablet the default camera preference is front-facing. Allow camera access on first use. The app releases the camera in the background and requests it again when you return.
 
 - **Settings and layouts** persist in the app’s local IndexedDB database. The four built-in layouts work offline. To import a template, select its layout file (Extensible Markup Language, `template.xml`) and its referenced images together in the file picker. The editor saves built-in changes as a new user layout.
 - **Saved photos** appear under **Files → On My iPad → Open Photo Booth → event name** on iPad and **Pictures → Open Photo Booth → event name** on Android. Each session writes the individual shots and the finished layout. Android 7–9 also asks for storage access.
@@ -386,6 +526,6 @@ Starring the repository, reporting bugs and sharing layouts help a lot too.
 
 ## License
 
-[MIT](LICENSE) © Open Photo Booth contributors.
+[MIT](LICENSE) © Open Photo Booth contributors, for Open Photo Booth's own code. The components it ships with, and the parts with other terms (face swap, the camera makers' libraries), are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 Open Photo Booth is an independent project. It is not affiliated with or endorsed by Lumasoft, LumaBooth or dslrBooth; those names are used only to describe compatibility with their template file format. Camera and printer brand names belong to their owners.

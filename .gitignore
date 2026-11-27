@@ -1,5 +1,13 @@
 node_modules/
 dist/
 .DS_Store
+camera-helper/build/
+drivers
+vendor/
+# e2e screenshots the README doesn't use
+docs/boomerang.jpg
+docs/capture-framed.jpg
+docs/faceswap.jpg
+docs/live-characters.jpg
 /www/
 /android/.idea/
