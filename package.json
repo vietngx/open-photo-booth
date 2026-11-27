@@ -9,11 +9,13 @@
     "start": "electron .",
     "test": "node test.js",
     "e2e": "node e2e.mjs",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "build:ios": "mkdir -p www && cp index.html app.js editor.js layout.js www/ && cp -R templates www/"
   },
   "devDependencies": {
-    "electron": "44.5.1",
-    "electron-builder": "26.15.3"
+    "@capacitor/cli": "^8.6.3",
+    "electron": "^44.11.6",
+    "electron-builder": "^26.18.0"
   },
   "build": {
     "appId": "org.openphotobooth.app",
@@ -58,5 +60,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/robert-schmidt/open-photo-booth.git"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.6.3",
+    "@capacitor/core": "^8.6.3",
+    "@capacitor/ios": "^8.6.3"
   }
 }

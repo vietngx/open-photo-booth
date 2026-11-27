@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Open Photo Booth</string>
+    <string name="title_activity_main">Open Photo Booth</string>
+    <string name="package_name">com.vietngx.openphotobooth</string>
+    <string name="custom_url_scheme">com.vietngx.openphotobooth</string>
+</resources>
